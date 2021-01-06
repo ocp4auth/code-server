@@ -18,7 +18,6 @@ import { localize } from 'vs/nls';
 import { Schemas } from 'vs/base/common/network';
 import product from 'vs/platform/product/common/product';
 import { encodePath } from 'vs/server/node/util';
-import { parseLogLevel } from 'vs/platform/log/common/log';
 
 function doCreateUri(path: string, queryValues: Map<string, string>): URI {
 	let query: string | undefined = undefined;
