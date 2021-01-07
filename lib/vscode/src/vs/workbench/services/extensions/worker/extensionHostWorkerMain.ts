@@ -21,11 +21,7 @@
 	require.config({
 		baseUrl: monacoBaseUrl,
 		catchError: true,
-		trustedTypesPolicy,
-		paths: {
-			'@coder/node-browser': `../node_modules/@coder/node-browser/out/client/client.js`,
-			'@coder/requirefs': `../node_modules/@coder/requirefs/out/requirefs.js`,
-		}
+		trustedTypesPolicy
 	});
 
 	require(['vs/workbench/services/extensions/worker/extensionHostWorker'], () => { }, err => console.error(err));
