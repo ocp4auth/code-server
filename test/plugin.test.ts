@@ -17,8 +17,10 @@ describe("plugin", () => {
   let s: httpserver.HttpServer
 
   before(async () => {
-    papi = new PluginAPI(logger, `${path.resolve(__dirname, "test-plugin")}:meow`)
-    await papi.loadPlugins()
+    // Only include the test plugin to avoid contaminating results with other
+    // plugins that might be on the filesystem.
+    papi = new PluginAPI(logger, `${path.resolve(__dirname, "test-plugin")}:meow`, "")
+    await papi.loadPlugins(false)
 
     const app = express.default()
     papi.mount(app)
