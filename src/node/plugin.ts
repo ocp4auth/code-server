@@ -19,6 +19,7 @@ require("module")._load = function (request: string, parent: object, isMain: boo
     return {
       express,
       field,
+      proxy,
     }
   }
   return originalLoad.apply(this, [request, parent, isMain])
