@@ -1,15 +1,17 @@
 import { field, logger } from "@coder/logger"
 import * as assert from "assert"
 import * as fs from "fs-extra"
-import "leaked-handles"
 import * as net from "net"
 import * as path from "path"
 import * as tls from "tls"
 import { Emitter } from "../src/common/emitter"
 import { SocketProxyProvider } from "../src/node/socket"
 import { generateCertificate, tmpdir } from "../src/node/util"
+import * as wtfnode from "./wtfnode"
 
 describe("SocketProxyProvider", () => {
+  wtfnode.setup()
+
   const provider = new SocketProxyProvider()
 
   const onServerError = new Emitter<{ event: string; error: Error }>()
