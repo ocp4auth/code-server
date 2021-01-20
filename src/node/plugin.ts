@@ -1,11 +1,13 @@
-import { Logger, field } from "@coder/logger"
+import { field, Logger } from "@coder/logger"
 import * as express from "express"
 import * as fs from "fs"
 import * as path from "path"
 import * as semver from "semver"
 import * as pluginapi from "../../typings/pluginapi"
+import { proxy } from "../node/proxy"
 import { version } from "./constants"
 import * as util from "./util"
+import { Router as WsRouter, WebsocketRouter } from "./wsRouter"
 const fsp = fs.promises
 
 /**
@@ -20,6 +22,7 @@ require("module")._load = function (request: string, parent: object, isMain: boo
       express,
       field,
       proxy,
+      WsRouter,
     }
   }
   return originalLoad.apply(this, [request, parent, isMain])
@@ -102,14 +105,16 @@ export class PluginAPI {
   }
 
   /**
-   * mount mounts all plugin routers onto r.
+   * mount mounts all plugin routers onto r and websocket routers onto wr.
    */
-  public mount(r: express.Router): void {
+  public mount(r: express.Router, wr: express.Router): void {
     for (const [, p] of this.plugins) {
-      if (!p.router) {
-        continue
+      if (p.router) {
+        r.use(`${p.routerPath}`, p.router())
       }
-      r.use(`${p.routerPath}`, p.router())
+      if (p.wsRouter) {
+        wr.use(`${p.routerPath}`, (p.wsRouter() as WebsocketRouter).router)
+      }
     }
   }
 
