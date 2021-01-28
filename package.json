@@ -136,6 +136,7 @@
       "global": {
         "lines": 40
       }
-    }
+    },
+    "testTimeout": 30000
   }
 }
