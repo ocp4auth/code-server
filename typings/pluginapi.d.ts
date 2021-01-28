@@ -120,7 +120,7 @@ export { express }
  *
  * Re-exported so plugins don't have to import duplicate copies of the logger.
  */
-export { field, Level }
+export { field, Level, Logger }
 
 export const proxy: ProxyServer
 
