@@ -7,7 +7,7 @@ import * as pluginapi from "../../typings/pluginapi"
 import { proxy } from "../node/proxy"
 import { version } from "./constants"
 import * as util from "./util"
-import { Router as WsRouter, WebsocketRouter } from "./wsRouter"
+import { wss, Router as WsRouter, WebsocketRouter } from "./wsRouter"
 const fsp = fs.promises
 
 /**
@@ -24,6 +24,7 @@ require("module")._load = function (request: string, parent: object, isMain: boo
       Level,
       proxy,
       WsRouter,
+      wss,
     }
   }
   return originalLoad.apply(this, [request, parent, isMain])
