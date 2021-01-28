@@ -28,12 +28,6 @@ describe("login", () => {
     await context.clearCookies()
   })
 
-  it("should see the login page", async () => {
-    await page.goto("http://localhost:8080")
-    // It should send us to the login page
-    expect(await page.title()).toBe("code-server login")
-  })
-
   it("should be able to login with the password from config.yml", async () => {
     await page.goto("http://localhost:8080")
     // Type in password
