@@ -10,12 +10,13 @@ describe("login", () => {
   let context: BrowserContext
 
   beforeAll(async () => {
-    browser = await chromium.launch({ headless: false })
+    browser = await chromium.launch()
     context = await browser.newContext()
   })
 
   afterAll(async () => {
     await browser.close()
+    await context.close()
   })
 
   beforeEach(async () => {
@@ -30,6 +31,8 @@ describe("login", () => {
 
   it("should see a 'Go Home' button in the Application Menu that goes to coder.com", async () => {
     await page.goto("http://localhost:8080")
+    // In case the page takes a long time to load
+    await page.waitForTimeout(2000)
     // Type in password
     await page.fill(".password", PASSWORD)
     // Click the submit button and login
@@ -37,14 +40,16 @@ describe("login", () => {
     // Click the Applicaiton menu
     await page.click(".menubar-menu-button[title='Application Menu']")
     // See the Go Home button
-    const goHomeButton = ".home-bar[aria-label='Home'] li"
+    const goHomeButton = "a.action-menu-item span[aria-label='Go Home']"
     expect(await page.isVisible(goHomeButton))
-    // Hover over element without clicking
-    await page.hover(goHomeButton)
-    // Click the top left corner of the element
+    // Click it and navigate to coder.com
     await page.click(goHomeButton)
-    // Note: we have to click on <li> in the Go Home button for it to work
-    // Land on coder.com
-    // expect(await page.url()).toBe("https://coder.com/")
+
+    // If there are unsaved changes it will show a dialog
+    // asking if you're sure you want to leave
+    page.on("dialog", (dialog) => dialog.accept())
+
+    await page.waitForTimeout(5000)
+    expect(await page.url()).toBe("https://coder.com/")
   })
 })
