@@ -10,7 +10,7 @@ describe("login", () => {
   let context: BrowserContext
 
   beforeAll(async () => {
-    browser = await chromium.launch()
+    browser = await chromium.launch({ headless: false })
     context = await browser.newContext()
   })
 
@@ -28,20 +28,23 @@ describe("login", () => {
     await context.clearCookies()
   })
 
-  it("should see the login page", async () => {
-    await page.goto("http://localhost:8080")
-    // It should send us to the login page
-    expect(await page.title()).toBe("code-server login")
-  })
-
-  it("should be able to login with the password from config.yml", async () => {
+  it("should see a 'Go Home' button in the Application Menu that goes to coder.com", async () => {
     await page.goto("http://localhost:8080")
     // Type in password
     await page.fill(".password", PASSWORD)
     // Click the submit button and login
     await page.click(".submit")
-    // See the editor
-    const codeServerEditor = await page.isVisible(".monaco-workbench")
-    expect(codeServerEditor).toBeTruthy()
+    // Click the Applicaiton menu
+    await page.click(".menubar-menu-button[title='Application Menu']")
+    // See the Go Home button
+    const goHomeButton = ".home-bar[aria-label='Home'] li"
+    expect(await page.isVisible(goHomeButton))
+    // Hover over element without clicking
+    await page.hover(goHomeButton)
+    // Click the top left corner of the element
+    await page.click(goHomeButton)
+    // Note: we have to click on <li> in the Go Home button for it to work
+    // Land on coder.com
+    // expect(await page.url()).toBe("https://coder.com/")
   })
 })
